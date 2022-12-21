@@ -7,6 +7,10 @@ import './assets/css/iconfont.css'
 
 import loveImg from './assets/img/love.png'
 
+if (window.NodeList && !NodeList.prototype.forEach) {
+  NodeList.prototype.forEach = Array.prototype.forEach
+}
+
 sayHi()
 
 function component () {
