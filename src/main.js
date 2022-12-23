@@ -1,17 +1,12 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
-
-import { sayHi } from './utils/say'
 import './assets/css/style.css'
 import './assets/css/iconfont.css'
 
 import loveImg from './assets/img/love.png'
+import(/* webpackPreload: true *//* webpackChunkName:"preload" */'./utils/testPreload')
 
-if (window.NodeList && !NodeList.prototype.forEach) {
-  NodeList.prototype.forEach = Array.prototype.forEach
+if (module.hot) {
+  module.hot.accept('./utils/say')
 }
-
-sayHi()
 
 function component () {
   const box = document.createElement('div')
@@ -29,6 +24,12 @@ function component () {
   // 将图像添加到我们已经存在的 div 中。
   const img = new Image()
   img.src = loveImg
+  // img.onclick = sayHi
+  img.onclick = () => {
+    import(/* webpackChunkName:"sayHi" */'./utils/say').then(({ sayHi }) => {
+      sayHi()
+    })
+  }
   box.appendChild(img)
 
   return box

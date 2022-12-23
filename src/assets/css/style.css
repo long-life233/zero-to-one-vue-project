@@ -1,4 +1,5 @@
 .hello {
-  color: red;
+  color: blue;
   /* background: url('../img/love.png'); */
+  display: flex;
 }

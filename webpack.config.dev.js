@@ -2,6 +2,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   // 相对 entry 的根目录
@@ -19,25 +20,35 @@ module.exports = {
   // },
   devServer: {
     static: './dist',
+    hot: true,
+    open: true
   },
   module: {
     rules: [
       {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: 'asset/resource',
-      },
-      {
-        test: /\.m?js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader'
-        }
+        oneOf: [
+          {
+            test: /\.css$/i,
+            use: [MiniCssExtractPlugin.loader, 'css-loader'],
+          },
+          {
+            test: /\.(png|svg|jpg|jpeg|gif)$/i,
+            type: 'asset/resource',
+          },
+          {
+            test: /\.m?js$/,
+            exclude: /(node_modules|bower_components)/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                cacheDirectory: true,
+                cacheCompression: false
+              }
+            }
+          }
+        ]
       }
-    ],
+    ]
   },
   plugins: [
     // 使用插件
@@ -49,8 +60,10 @@ module.exports = {
       context: path.resolve(__dirname, ''),
       extensions: ['js', 'jsx'],
       exclude: ['node_modules', 'dist'],
-      fix: true
-    })
+      fix: true,
+      cache: true
+    }),
+    new MiniCssExtractPlugin()
   ],
   mode: 'development'
 }
